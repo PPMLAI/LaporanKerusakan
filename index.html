@@ -24,6 +24,7 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
+            overflow-x: hidden;
         }
         .sidebar {
             background-color: var(--primary-color);
@@ -33,7 +34,7 @@
             top: 0;
             left: 0;
             width: 260px;
-            z-index: 1000;
+            z-index: 1040;
             transition: all 0.3s;
         }
         .sidebar .brand {
@@ -59,6 +60,7 @@
         .main-content {
             margin-left: 260px;
             padding: 30px;
+            transition: all 0.3s;
         }
         .card-metric {
             border: none;
@@ -96,7 +98,7 @@
             border-left: 4px solid #f59e0b;
             font-size: 0.85rem;
         }
-        /* Running Text / Marquee Style - Diubah ke Biru Industrial */
+        /* Running Text Style */
         .running-text-card {
             overflow: hidden;
             white-space: nowrap;
@@ -112,19 +114,43 @@
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
-        @media (max-width: 768px) {
-            .sidebar { width: 70px; }
-            .sidebar .brand span, .sidebar .nav-link span { display: none; }
-            .main-content { margin-left: 70px; padding: 15px; }
+
+        /* Responsive Media Queries untuk HP & Tablet */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0 !important;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Mobile Navbar & Toggle -->
+    <nav class="navbar navbar-dark bg-dark d-lg-none px-3 py-2">
+        <div class="container-fluid p-0">
+            <button class="btn btn-outline-light btn-sm" type="button" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i> Menu
+            </button>
+            <span class="navbar-brand mb-0 h6 text-white"><i class="fa-solid fa-cogs me-1 text-primary"></i> PPM LAI</span>
+        </div>
+    </nav>
+
     <!-- Sidebar -->
-    <div class="sidebar d-none d-md-block">
-        <div class="brand">
-            <i class="fa-solid fa-cogs me-2 text-primary"></i> <span>PPM LAI</span>
+    <div class="sidebar" id="appSidebar">
+        <div class="brand d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fa-solid fa-cogs me-2 text-primary"></i> <span>PPM LAI</span>
+            </div>
+            <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark fs-5"></i>
+            </button>
         </div>
         <ul class="nav flex-column mt-3">
             <li class="nav-item">
@@ -139,25 +165,25 @@
         <!-- Top Header -->
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
             <div>
-                <h4 class="fw-bold mb-1" id="pageTitle">Monitoring & Input Perbaikan Mesin</h4>
+                <h4 class="fw-bold mb-1 fs-5 fs-md-4" id="pageTitle">Monitoring & Input Perbaikan Mesin</h4>
                 <p class="text-muted mb-0 small">Dashboard dan Form Input terintegrasi Google Sheets</p>
             </div>
             
-            <div class="d-flex align-items-center flex-wrap gap-3">
-                <div class="bg-white border rounded-pill px-3 py-1.5 shadow-sm d-flex align-items-center gap-3 small">
-                    <span class="text-secondary">
+            <div class="d-flex align-items-center flex-wrap gap-2 w-100 w-md-auto justify-content-between justify-content-md-end">
+                <div class="bg-white border rounded-pill px-3 py-1.5 shadow-sm d-flex align-items-center gap-2 gap-md-3 small overflow-auto">
+                    <span class="text-secondary text-nowrap">
                         <i class="fa-regular fa-calendar-days text-primary me-1"></i> <span id="currentDate">-</span>
                     </span>
-                    <span class="text-secondary border-start ps-3">
+                    <span class="text-secondary border-start ps-2 ps-md-3 text-nowrap">
                         <i class="fa-regular fa-clock text-primary me-1"></i> <span id="currentTime">-</span>
                     </span>
-                    <span class="border-start ps-3 fw-semibold" id="dbStatusBadge">
+                    <span class="border-start ps-2 ps-md-3 fw-semibold text-nowrap" id="dbStatusBadge">
                         <i class="fa-solid fa-database text-warning me-1"></i> <span class="text-muted">Memeriksa...</span>
                     </span>
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-outline-secondary btn-sm" onclick="fetchData()"><i class="fa-solid fa-sync me-1"></i> Refresh Data</button>
+                    <button class="btn btn-outline-secondary btn-sm text-nowrap" onclick="fetchData()"><i class="fa-solid fa-sync me-1"></i> Refresh</button>
                 </div>
             </div>
         </div>
@@ -167,34 +193,34 @@
             
             <!-- BAGIAN KIRI: FORMULIR INPUT LAPORAN -->
             <div class="col-lg-5">
-                <div class="card table-card p-4 h-100">
+                <div class="card table-card p-3 p-md-4 h-100">
                     <h5 class="fw-bold mb-2"><i class="fa-solid fa-clipboard-list text-primary me-2"></i>Form Input Laporan</h5>
                     <p class="text-muted small mb-4">Isi data di bawah ini untuk langsung menyimpannya ke Google Sheets.</p>
                     
                     <form id="repairForm" onsubmit="submitForm(event)">
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">Nama Mesin</label>
                                 <input type="text" class="form-control form-control-sm" name="namaMesin" placeholder="Contoh: Mesin Press A-01" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">Tanggal Pengerjaan</label>
                                 <input type="date" class="form-control form-control-sm" name="tanggalPengerjaan" required>
                             </div>
                         </div>
 
                         <div class="row g-3 mb-3">
-                            <div class="col-md-4">
+                            <div class="col-4">
                                 <label class="form-label small fw-semibold">Jam Minta</label>
-                                <input type="time" class="form-control form-control-sm" name="jamPermintaan" required>
+                                <input type="time" class="form-control form-control-sm px-1" name="jamPermintaan" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-4">
                                 <label class="form-label small fw-semibold">Jam Periksa</label>
-                                <input type="time" class="form-control form-control-sm" name="jamPemeriksaan" required>
+                                <input type="time" class="form-control form-control-sm px-1" name="jamPemeriksaan" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-4">
                                 <label class="form-label small fw-semibold">Jam Rusak</label>
-                                <input type="time" class="form-control form-control-sm" name="jamDitemukan" required>
+                                <input type="time" class="form-control form-control-sm px-1" name="jamDitemukan" required>
                             </div>
                         </div>
 
@@ -222,11 +248,11 @@
                         </div>
 
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">Selesai (Jam)</label>
                                 <input type="time" class="form-control form-control-sm" name="selesaiPerbaikan" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">Kondisi Mesin</label>
                                 <input type="text" class="form-control form-control-sm" name="kondisiMesin" placeholder="Normal / Baik" required>
                             </div>
@@ -257,40 +283,40 @@
             <div class="col-lg-7">
                 <!-- Metrics Row -->
                 <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <div class="card card-metric p-3">
+                    <div class="col-4">
+                        <div class="card card-metric p-2 p-md-3">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
-                                    <p class="text-muted mb-1 small fw-semibold">Total Perbaikan</p>
-                                    <h4 class="fw-bold mb-0" id="totalPerbaikan">0</h4>
+                                    <p class="text-muted mb-1 small fw-semibold">Total</p>
+                                    <h4 class="fw-bold mb-0 fs-5 fs-md-4" id="totalPerbaikan">0</h4>
                                 </div>
-                                <div class="metric-icon bg-primary bg-opacity-10 text-primary">
+                                <div class="metric-icon bg-primary bg-opacity-10 text-primary d-none d-sm-flex">
                                     <i class="fa-solid fa-screwdriver-wrench"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card card-metric p-3">
+                    <div class="col-4">
+                        <div class="card card-metric p-2 p-md-3">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
-                                    <p class="text-muted mb-1 small fw-semibold">Mesin Ditangani</p>
-                                    <h4 class="fw-bold mb-0" id="totalMesin">0</h4>
+                                    <p class="text-muted mb-1 small fw-semibold">Mesin</p>
+                                    <h4 class="fw-bold mb-0 fs-5 fs-md-4" id="totalMesin">0</h4>
                                 </div>
-                                <div class="metric-icon bg-success bg-opacity-10 text-success">
+                                <div class="metric-icon bg-success bg-opacity-10 text-success d-none d-sm-flex">
                                     <i class="fa-solid fa-industry"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card card-metric p-3">
+                    <div class="col-4">
+                        <div class="card card-metric p-2 p-md-3">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
-                                    <p class="text-muted mb-1 small fw-semibold">Petugas Aktif</p>
-                                    <h4 class="fw-bold mb-0" id="totalPetugas">6</h4>
+                                    <p class="text-muted mb-1 small fw-semibold">Petugas</p>
+                                    <h4 class="fw-bold mb-0 fs-5 fs-md-4" id="totalPetugas">6</h4>
                                 </div>
-                                <div class="metric-icon bg-warning bg-opacity-10 text-warning">
+                                <div class="metric-icon bg-warning bg-opacity-10 text-warning d-none d-sm-flex">
                                     <i class="fa-solid fa-users"></i>
                                 </div>
                             </div>
@@ -300,7 +326,7 @@
 
                 <!-- Charts Row (Bar Chart & Pie Chart) -->
                 <div class="row g-3 mb-3">
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="card table-card p-3 h-100">
                             <h6 class="fw-bold mb-3 small">Tren Perbaikan Berdasarkan Mesin</h6>
                             <div style="height: 180px; position: relative;">
@@ -308,7 +334,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="card table-card p-3 h-100">
                             <h6 class="fw-bold mb-3 small">Distribusi Petugas Mengerjakan</h6>
                             <div style="height: 180px; position: relative;">
@@ -318,20 +344,20 @@
                     </div>
                 </div>
 
-                <!-- Keterangan Resume Analisa Kerusakan (Perhatian Khusus) -->
+                <!-- Keterangan Resume Analisa Kerusakan -->
                 <div class="card alert-resume p-3 shadow-sm mb-3">
                     <div class="d-flex align-items-start gap-2">
                         <i class="fa-solid fa-triangle-exclamation text-warning fs-5 mt-1"></i>
                         <div>
-                            <h6 class="fw-bold mb-1 text-dark">Perhatian Khusus: Resume Analisa Kerusakan Terbaru</h6>
-                            <p class="mb-0 text-muted" id="resumeKerusakanText">Memuat ringkasan analisa kerusakan...</p>
+                            <h6 class="fw-bold mb-1 text-dark">Perhatian Khusus: Resume Analisa Kerusakan</h6>
+                            <p class="mb-0 text-muted small" id="resumeKerusakanText">Memuat ringkasan analisa kerusakan...</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Perbandingan Bulan Ini vs Bulan Sebelumnya -->
                 <div class="card table-card p-3 mb-3">
-                    <h6 class="fw-bold mb-3 small"><i class="fa-solid fa-chart-line text-primary me-2"></i>Perbandingan Penanganan: Bulan Ini vs Bulan Lalu</h6>
+                    <h6 class="fw-bold mb-3 small"><i class="fa-solid fa-chart-line text-primary me-2"></i>Perbandingan: Bulan Ini vs Bulan Lalu</h6>
                     <div class="row text-center g-2">
                         <div class="col-6 border-end">
                             <div class="p-2 bg-light rounded">
@@ -342,7 +368,7 @@
                         </div>
                         <div class="col-6">
                             <div class="p-2 bg-light rounded">
-                                <span class="text-muted small d-block">Bulan Sebelumnya</span>
+                                <span class="text-muted small d-block">Bulan Lalu</span>
                                 <h4 class="fw-bold text-secondary mb-0" id="countBulanLalu">0</h4>
                                 <small class="text-secondary" id="namaBulanLalu">-</small>
                             </div>
@@ -350,7 +376,7 @@
                     </div>
                 </div>
 
-                <!-- Running Text / Teks Berjalan (Warna Biru Industrial) -->
+                <!-- Running Text -->
                 <div class="card running-text-card p-2 shadow-sm">
                     <div class="d-flex align-items-center">
                         <span class="badge bg-light text-primary me-2 px-2 py-1"><i class="fa-solid fa-bullhorn"></i> INFO</span>
@@ -368,10 +394,10 @@
         <!-- TABEL RIWAYAT DI BAWAH -->
         <div class="row mt-4">
             <div class="col-12">
-                <div class="card table-card p-4">
+                <div class="card table-card p-3 p-md-4">
                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                        <h5 class="fw-bold mb-0">Riwayat Laporan Perbaikan Terbaru</h5>
-                        <div class="input-group" style="width: 250px;">
+                        <h5 class="fw-bold mb-0 fs-6 fs-md-5">Riwayat Laporan Perbaikan Terbaru</h5>
+                        <div class="input-group w-100 w-md-auto" style="max-width: 250px;">
                             <input type="text" class="form-control form-control-sm" id="searchTable" placeholder="Cari mesin/petugas..." onkeyup="filterTable()">
                         </div>
                     </div>
@@ -379,12 +405,12 @@
                         <table class="table table-hover align-middle mb-0" id="reportTable">
                             <thead>
                                 <tr>
-                                    <th>Tanggal</th>
-                                    <th>Nama Mesin</th>
-                                    <th>Analisa Kerusakan</th>
-                                    <th>Uraian Perbaikan</th>
-                                    <th>Petugas</th>
-                                    <th>Kondisi</th>
+                                    <th class="text-nowrap">Tanggal</th>
+                                    <th class="text-nowrap">Nama Mesin</th>
+                                    <th class="text-nowrap">Analisa Kerusakan</th>
+                                    <th class="text-nowrap">Uraian Perbaikan</th>
+                                    <th class="text-nowrap">Petugas</th>
+                                    <th class="text-nowrap">Kondisi</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
@@ -409,6 +435,10 @@
         let allData = [];
         let machineChartInstance = null;
         let petugasChartInstance = null;
+
+        function toggleSidebar() {
+            document.getElementById('appSidebar').classList.toggle('show');
+        }
 
         function updateDateTime() {
             const now = new Date();
@@ -479,7 +509,7 @@
                 }
             });
 
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
             document.getElementById('countBulanIni').innerText = countThisMonth;
             document.getElementById('namaBulanIni').innerText = monthNames[currentMonth] + ' ' + currentYear;
             
@@ -502,12 +532,12 @@
 
             tbody.innerHTML = data.map(item => `
                 <tr>
-                    <td>${formatTanggalIndonesia(item.tanggalPengerjaan)}</td>
-                    <td class="fw-semibold">${item.namaMesin || '-'}</td>
+                    <td class="text-nowrap">${formatTanggalIndonesia(item.tanggalPengerjaan)}</td>
+                    <td class="fw-semibold text-nowrap">${item.namaMesin || '-'}</td>
                     <td>${item.analisaKerusakan || '-'}</td>
                     <td>${item.uraianPerbaikan || '-'}</td>
-                    <td><span class="badge bg-light text-dark border">${item.petugasMengerjakan || item.namaPetugas || '-'}</span></td>
-                    <td><span class="badge bg-success bg-opacity-10 text-success">${item.kondisiMesin || 'Normal'}</span></td>
+                    <td class="text-nowrap"><span class="badge bg-light text-dark border">${item.petugasMengerjakan || item.namaPetugas || '-'}</span></td>
+                    <td class="text-nowrap"><span class="badge bg-success bg-opacity-10 text-success">${item.kondisiMesin || 'Normal'}</span></td>
                 </tr>
             `).join('');
 
@@ -563,7 +593,7 @@
                     maintainAspectRatio: false,
                     plugins: { 
                         legend: { 
-                            position: 'right', 
+                            position: 'bottom', 
                             labels: { boxWidth: 10, font: { size: 10 } } 
                         } 
                     }
@@ -581,12 +611,12 @@
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = filtered.map(item => `
                 <tr>
-                    <td>${formatTanggalIndonesia(item.tanggalPengerjaan)}</td>
-                    <td class="fw-semibold">${item.namaMesin || '-'}</td>
+                    <td class="text-nowrap">${formatTanggalIndonesia(item.tanggalPengerjaan)}</td>
+                    <td class="fw-semibold text-nowrap">${item.namaMesin || '-'}</td>
                     <td>${item.analisaKerusakan || '-'}</td>
                     <td>${item.uraianPerbaikan || '-'}</td>
-                    <td><span class="badge bg-light text-dark border">${item.petugasMengerjakan || item.namaPetugas || '-'}</span></td>
-                    <td><span class="badge bg-success bg-opacity-10 text-success">${item.kondisiMesin || 'Normal'}</span></td>
+                    <td class="text-nowrap"><span class="badge bg-light text-dark border">${item.petugasMengerjakan || item.namaPetugas || '-'}</span></td>
+                    <td class="text-nowrap"><span class="badge bg-success bg-opacity-10 text-success">${item.kondisiMesin || 'Normal'}</span></td>
                 </tr>
             `).join('');
         }
