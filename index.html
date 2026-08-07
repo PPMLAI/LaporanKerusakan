@@ -93,11 +93,48 @@
             background-color: #f8fafc;
             border-bottom: 2px solid #e2e8f0;
         }
+        /* Penyesuaian Padding Tabel agar Lebih Rapat & Nyaman */
+        #reportTable th, #reportTable td {
+            padding: 0.5rem !important;
+        }
+        #reportTable .badge {
+            font-size: 0.7rem;
+        }
+
         .alert-resume {
             background-color: #fffbeb;
             border-left: 4px solid #f59e0b;
             font-size: 0.85rem;
         }
+
+        /* Custom Checkbox Box Style - Diperkecil agar Tanpa Scrolling */
+        .checkbox-container-box {
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            padding: 4px 8px;
+            background-color: #fff;
+        }
+        .checkbox-container-box .form-check {
+            margin-bottom: 1px;
+        }
+        .checkbox-container-box .form-check-input {
+            width: 0.75rem;
+            height: 0.75rem;
+            margin-top: 0.15rem;
+            cursor: pointer;
+        }
+        .checkbox-container-box .form-check-label {
+            font-size: 0.73rem;
+            cursor: pointer;
+        }
+
+        /* Styling Khusus Input Jam agar Lebih Kecil dan Rapi */
+        .time-input-sm {
+            font-size: 0.75rem !important;
+            padding: 0.3rem 0.2rem !important;
+            text-align: center;
+        }
+
         /* Running Text Style */
         .running-text-card {
             overflow: hidden;
@@ -201,7 +238,39 @@
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">Nama Mesin</label>
-                                <input type="text" class="form-control form-control-sm" name="namaMesin" placeholder="Contoh: Mesin Press A-01" required>
+                                <select class="form-select form-select-sm" name="namaMesin" required>
+                                    <option value="" disabled selected>Pilih Mesin...</option>
+                                    <option value="CTCP">CTCP</option>
+                                    <option value="Polar 115">Polar 115</option>
+                                    <option value="SM 74">SM 74</option>
+                                    <option value="Goss 1">Goss 1</option>
+                                    <option value="Goss 2">Goss 2</option>
+                                    <option value="Counter Stacker">Counter Stacker</option>
+                                    <option value="Stahl Folder">Stahl Folder</option>
+                                    <option value="Gathering">Gathering</option>
+                                    <option value="Ventura 1">Ventura 1</option>
+                                    <option value="Ventura 2">Ventura 2</option>
+                                    <option value="Ventura 3">Ventura 3</option>
+                                    <option value="Press BBL">Press BBL</option>
+                                    <option value="Mesin BBL">Mesin BBL</option>
+                                    <option value="Pemanas BBL">Pemanas BBL</option>
+                                    <option value="Polar 92">Polar 92</option>
+                                    <option value="Potong sudut 1">Potong sudut 1</option>
+                                    <option value="Potong sudut 2">Potong sudut 2</option>
+                                    <option value="Pilung">Pilung</option>
+                                    <option value="BL 500">BL 500</option>
+                                    <option value="BL 500-EP">BL 500-EP</option>
+                                    <option value="Meiwa">Meiwa</option>
+                                    <option value="Shrink LC6000">Shrink LC6000</option>
+                                    <option value="Shrink">Shrink</option>
+                                    <option value="Genset Cummins Cream">Genset Cummins Cream</option>
+                                    <option value="Genset CUMMINS Hijau">Genset CUMMINS Hijau</option>
+                                    <option value="Genset Server">Genset Server</option>
+                                    <option value="Kompresor Boge">Kompresor Boge</option>
+                                    <option value="Kompresor MMI 1">Kompresor MMI 1</option>
+                                    <option value="KOmpresor MMI 2">KOmpresor MMI 2</option>
+                                    <option value="Kompresor Kaishan">Kompresor Kaishan</option>
+                                </select>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">Tanggal Pengerjaan</label>
@@ -209,32 +278,58 @@
                             </div>
                         </div>
 
-                        <div class="row g-3 mb-3">
+                        <!-- Bagian Jam -->
+                        <div class="row g-2 mb-3">
                             <div class="col-4">
-                                <label class="form-label small fw-semibold">Jam Permintaan</label>
-                                <input type="time" class="form-control form-control-sm px-1" name="jamPermintaan" required>
+                                <label class="form-label small fw-semibold" style="font-size: 0.75rem;">Jam Permintaan</label>
+                                <input type="time" class="form-control time-input-sm" name="jamPermintaan" required>
                             </div>
                             <div class="col-4">
-                                <label class="form-label small fw-semibold">Jam Diperiksa</label>
-                                <input type="time" class="form-control form-control-sm px-1" name="jamPemeriksaan" required>
+                                <label class="form-label small fw-semibold" style="font-size: 0.75rem;">Jam Diperiksa</label>
+                                <input type="time" class="form-control time-input-sm" name="jamPemeriksaan" required>
                             </div>
                             <div class="col-4">
-                                <label class="form-label small fw-semibold">Jam Temuan Kerusakan</label>
-                                <input type="time" class="form-control form-control-sm px-1" name="jamDitemukan" required>
+                                <label class="form-label small fw-semibold" style="font-size: 0.75rem;">Jam Temuan</label>
+                                <input type="time" class="form-control time-input-sm" name="jamDitemukan" required>
                             </div>
                         </div>
 
+                        <!-- Nama Petugas Penerima Multiple Choice (Tanpa Scroll) -->
                         <div class="mb-3">
-                            <label class="form-label small fw-semibold">Nama Petugas Penerima</label>
-                            <select class="form-select form-select-sm" name="namaPetugas" required>
-                                <option value="" selected disabled>Pilih Petugas</option>
-                                <option value="Supriyadi">Supriyadi</option>
-                                <option value="Timur">Timur</option>
-                                <option value="Agus Setiawan">Agus Setiawan</option>
-                                <option value="Julio">Julio</option>
-                                <option value="Joyo S.">Joyo S.</option>
-                                <option value="Agus Purwanto">Agus Purwanto</option>
-                            </select>
+                            <label class="form-label small fw-semibold mb-1">Nama Petugas Penerima (Pilih satu atau lebih)</label>
+                            <div class="checkbox-container-box">
+                                <div class="row g-0">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-penerima-cb" type="checkbox" value="Supriyadi" id="penerima1">
+                                            <label class="form-check-label" for="penerima1">Supriyadi</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-penerima-cb" type="checkbox" value="Timur" id="penerima2">
+                                            <label class="form-check-label" for="penerima2">Timur</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-penerima-cb" type="checkbox" value="Agus Setiawan" id="penerima3">
+                                            <label class="form-check-label" for="penerima3">Agus Setiawan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-penerima-cb" type="checkbox" value="Julio" id="penerima4">
+                                            <label class="form-check-label" for="penerima4">Julio</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-penerima-cb" type="checkbox" value="Joyo S." id="penerima5">
+                                            <label class="form-check-label" for="penerima5">Joyo S.</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-penerima-cb" type="checkbox" value="Agus Purwanto" id="penerima6">
+                                            <label class="form-check-label" for="penerima6">Agus Purwanto</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="namaPetugas" id="namaPetugasHidden">
                         </div>
 
                         <div class="mb-3">
@@ -258,17 +353,42 @@
                             </div>
                         </div>
 
+                        <!-- Petugas Yang Mengerjakan Multiple Choice (Tanpa Scroll) -->
                         <div class="mb-4">
-                            <label class="form-label small fw-semibold">Petugas Yang Mengerjakan</label>
-                            <select class="form-select form-select-sm" name="petugasMengerjakan" required>
-                                <option value="" selected disabled>Pilih Petugas Mengerjakan</option>
-                                <option value="Supriyadi">Supriyadi</option>
-                                <option value="Timur">Timur</option>
-                                <option value="Agus Setiawan">Agus Setiawan</option>
-                                <option value="Julio">Julio</option>
-                                <option value="Joyo S.">Joyo S.</option>
-                                <option value="Agus Purwanto">Agus Purwanto</option>
-                            </select>
+                            <label class="form-label small fw-semibold mb-1">Petugas Yang Mengerjakan (Pilih satu atau lebih)</label>
+                            <div class="checkbox-container-box">
+                                <div class="row g-0">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-kerja-cb" type="checkbox" value="Supriyadi" id="kerja1">
+                                            <label class="form-check-label" for="kerja1">Supriyadi</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-kerja-cb" type="checkbox" value="Timur" id="kerja2">
+                                            <label class="form-check-label" for="kerja2">Timur</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-kerja-cb" type="checkbox" value="Agus Setiawan" id="kerja3">
+                                            <label class="form-check-label" for="kerja3">Agus Setiawan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-kerja-cb" type="checkbox" value="Julio" id="kerja4">
+                                            <label class="form-check-label" for="kerja4">Julio</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-kerja-cb" type="checkbox" value="Joyo S." id="kerja5">
+                                            <label class="form-check-label" for="kerja5">Joyo S.</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input petugas-kerja-cb" type="checkbox" value="Agus Purwanto" id="kerja6">
+                                            <label class="form-check-label" for="kerja6">Agus Purwanto</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="petugasMengerjakan" id="petugasMengerjakanHidden">
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
@@ -402,7 +522,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" id="reportTable">
+                        <table class="table table-hover align-middle mb-0 small" id="reportTable">
                             <thead>
                                 <tr>
                                     <th class="text-nowrap">Tanggal</th>
@@ -474,10 +594,10 @@
             } catch (error) {
                 console.warn("Gagal mengambil data langsung dari Apps Script, memuat data contoh.", error);
                 allData = [
-                    {tanggalPengerjaan: '2026-07-20', namaMesin: 'Mesin Press A', analisaKerusakan: 'Oli bocor pada seal utama', uraianPerbaikan: 'Ganti seal baru', namaPetugas: 'Supriyadi', kondisiMesin: 'Normal', petugasMengerjakan: 'Supriyadi'},
-                    {tanggalPengerjaan: '2026-07-21', namaMesin: 'Mesin Conveyor 2', analisaKerusakan: 'Belt utama putus akibat gesekan berlebih', uraianPerbaikan: 'Sambung & ganti belt', namaPetugas: 'Timur', kondisiMesin: 'Baik', petugasMengerjakan: 'Timur'},
-                    {tanggalPengerjaan: '2026-06-15', namaMesin: 'Mesin Lathe B', analisaKerusakan: 'Kelistrikan short pada panel kontrol', uraianPerbaikan: 'Perbaikan kabel utama', namaPetugas: 'Agus Setiawan', kondisiMesin: 'Normal', petugasMengerjakan: 'Agus Setiawan'},
-                    {tanggalPengerjaan: '2026-06-10', namaMesin: 'Mesin Milling X', analisaKerusakan: 'Bearing aus', uraianPerbaikan: 'Ganti bearing set', namaPetugas: 'Joyo S.', kondisiMesin: 'Baik', petugasMengerjakan: 'Joyo S.'},
+                    {tanggalPengerjaan: '2026-07-20', namaMesin: 'SM 74', analisaKerusakan: 'Oli bocor pada seal utama', uraianPerbaikan: 'Ganti seal baru', namaPetugas: 'Supriyadi', kondisiMesin: 'Normal', petugasMengerjakan: 'Supriyadi'},
+                    {tanggalPengerjaan: '2026-07-21', namaMesin: 'Polar 115', analisaKerusakan: 'Belt utama putus akibat gesekan berlebih', uraianPerbaikan: 'Sambung & ganti belt', namaPetugas: 'Timur', kondisiMesin: 'Baik', petugasMengerjakan: 'Timur'},
+                    {tanggalPengerjaan: '2026-06-15', namaMesin: 'CTCP', analisaKerusakan: 'Kelistrikan short pada panel kontrol', uraianPerbaikan: 'Perbaikan kabel utama', namaPetugas: 'Agus Setiawan', kondisiMesin: 'Normal', petugasMengerjakan: 'Agus Setiawan'},
+                    {tanggalPengerjaan: '2026-06-10', namaMesin: 'Gathering', analisaKerusakan: 'Bearing aus', uraianPerbaikan: 'Ganti bearing set', namaPetugas: 'Joyo S.', kondisiMesin: 'Baik', petugasMengerjakan: 'Joyo S.'},
                 ];
                 updateDatabaseStatus('offline');
                 renderDashboard(allData);
@@ -549,11 +669,16 @@
             const petugasCounts = {};
 
             data.forEach(item => {
-                const m = item.namaMesin || 'Lainnya';
+                const m = item.namaMesin ? item.namaMesin.trim() : 'Lainnya';
                 machineCounts[m] = (machineCounts[m] || 0) + 1;
 
-                const p = item.petugasMengerjakan || item.namaPetugas || 'Lainnya';
-                petugasCounts[p] = (petugasCounts[p] || 0) + 1;
+                const rawPetugas = item.petugasMengerjakan || item.namaPetugas || 'Lainnya';
+                rawPetugas.split(',').forEach(pName => {
+                    const cleanName = pName.trim();
+                    if(cleanName) {
+                        petugasCounts[cleanName] = (petugasCounts[cleanName] || 0) + 1;
+                    }
+                });
             });
 
             const ctxMachine = document.getElementById('machineChart').getContext('2d');
@@ -585,7 +710,7 @@
                     labels: Object.keys(petugasCounts),
                     datasets: [{
                         data: Object.values(petugasCounts),
-                        backgroundColor: ['#2563eb', '#38bdf8', '#f59e0b', '#10b981', '#6366f1', '#ec4899']
+                        backgroundColor: ['#2563eb', '#38bdf8', '#f59e0b', '#10b981', '#6366f1', '#ec4899', '#8b5cf6', '#14b8a6']
                     }]
                 },
                 options: {
@@ -623,6 +748,15 @@
 
         async function submitForm(event) {
             event.preventDefault();
+            
+            const checkedPenerima = Array.from(document.querySelectorAll('.petugas-penerima-cb:checked'))
+                                         .map(cb => cb.value);
+            document.getElementById('namaPetugasHidden').value = checkedPenerima.join(', ');
+
+            const checkedKerja = Array.from(document.querySelectorAll('.petugas-kerja-cb:checked'))
+                                      .map(cb => cb.value);
+            document.getElementById('petugasMengerjakanHidden').value = checkedKerja.join(', ');
+
             const form = document.getElementById('repairForm');
             const formData = new FormData(form);
             const dataObj = Object.fromEntries(formData.entries());
