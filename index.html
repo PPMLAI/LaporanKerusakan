@@ -215,6 +215,19 @@
         <!-- Top Header Modern dengan Gradasi Biru -->
         <div class="header-modern d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <div>
+                <!-- Lokasi dan Suhu di Sebelah Kiri dengan Icon Modern Berukuran Agak Besar -->
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-location-dot fs-4 text-info"></i>
+                        <span class="fw-semibold fs-6" id="locationText">Cibinong, Bogor</span>
+                    </div>
+                    <div class="vr bg-light opacity-50" style="height: 24px;"></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-temperature-half fs-4 text-warning"></i>
+                        <span class="fw-semibold fs-6" id="tempText">28°C</span>
+                    </div>
+                </div>
+
                 <!-- Sapaan Dinamis Berdasarkan Waktu -->
                 <h5 id="greeting" class="fw-bold mb-2">
                     <i id="greeting-icon" class="me-2"></i><span id="greeting-text"></span>
@@ -225,15 +238,21 @@
             </div>
             
             <div class="d-flex align-items-center flex-wrap gap-2 w-100 w-md-auto justify-content-between justify-content-md-end">
-                <div class="bg-white border rounded-pill px-3 py-1.5 shadow-sm d-flex align-items-center gap-2 gap-md-3 small overflow-auto">
+                <div class="bg-white border rounded-pill px-2 py-1 shadow-sm d-flex align-items-center gap-1 gap-md-2" style="font-size: 0.75rem;">
+                    <!-- Logo di Bagian Kiri, Sejajar dengan Tombol Refresh -->
+                    <div class="d-flex align-items-center gap-1 border-end pe-2">
+                        <img src="logo PPM.png" alt="Logo PPM" style="height: 24px; width: auto; object-fit: contain;">
+                        <span class="fw-bold text-dark text-nowrap d-none d-sm-inline" style="font-size: 0.75rem;">PPM LAI</span>
+                    </div>
+                    
                     <span class="text-secondary text-nowrap">
-                        <i class="fa-regular fa-calendar-days text-primary me-1"></i> <span id="currentDate">-</span>
+                        <i class="fa-regular fa-calendar-days text-primary me-1"></i><span id="currentDate">-</span>
                     </span>
-                    <span class="text-secondary border-start ps-2 ps-md-3 text-nowrap">
-                        <i class="fa-regular fa-clock text-primary me-1"></i> <span id="currentTime">-</span>
+                    <span class="text-secondary border-start ps-2 text-nowrap">
+                        <i class="fa-regular fa-clock text-primary me-1"></i><span id="currentTime">-</span>
                     </span>
-                    <span class="border-start ps-2 ps-md-3 fw-semibold text-nowrap" id="dbStatusBadge">
-                        <i class="fa-solid fa-database text-warning me-1"></i> <span class="text-muted">Memeriksa...</span>
+                    <span class="border-start ps-2 fw-semibold text-nowrap" id="dbStatusBadge" style="font-size: 0.7rem;">
+                        <i class="fa-solid fa-database text-warning me-1"></i><span class="text-muted">Memeriksa...</span>
                     </span>
                 </div>
 
@@ -473,7 +492,7 @@
                     </div>
                 </div>
 
-                <!-- GRAFIK: TREN PERBAIKAN, FREKUENSI MESIN SERING PERBAIKAN, & PERSENTASE TEKNISI -->
+                <!-- GRAFIK-GRAFIK DASHBOARD -->
                 <div class="row g-3 mb-3">
                     <div class="col-12">
                         <div class="card table-card p-3">
@@ -483,20 +502,20 @@
                             </div>
                         </div>
                     </div>
-                    <!-- TAMBAHAN BARU: GRAFIK MESIN YANG SERING PERBAIKAN -->
-                    <div class="col-12">
-                        <div class="card table-card p-3">
-                            <h6 class="fw-bold mb-3 small"><i class="fa-solid fa-chart-bar text-primary me-2"></i>Frekuensi Mesin Sering Perbaikan</h6>
-                            <div style="height: 180px; position: relative;">
-                                <canvas id="machineChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-12">
                         <div class="card table-card p-3">
                             <h6 class="fw-bold mb-3 small"><i class="fa-solid fa-chart-pie text-primary me-2"></i>Persentase Petugas Teknisi</h6>
                             <div style="height: 180px; position: relative;">
                                 <canvas id="technicianChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Grafik Frekuensi Perbaikan Mesin dengan Gradasi Biru ke Hijau & Highlighting -->
+                    <div class="col-12">
+                        <div class="card table-card p-3">
+                            <h6 class="fw-bold mb-3 small"><i class="fa-solid fa-chart-column text-primary me-2"></i>Frekuensi Perbaikan Berdasarkan Mesin</h6>
+                            <div style="height: 220px; position: relative;">
+                                <canvas id="machineRepairChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -560,8 +579,8 @@
 
         let allData = [];
         let trendChartInstance = null;
-        let machineChartInstance = null;
         let technicianChartInstance = null;
+        let machineRepairChartInstance = null;
 
         function toggleSidebar() {
             document.getElementById('appSidebar').classList.toggle('show');
@@ -569,9 +588,9 @@
 
         function updateDateTime() {
             const now = new Date();
-            const optionsDate = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+            const optionsDate = { day: 'numeric', month: 'short', year: 'numeric' }; // Hari dihapus dari format tanggal agar lebih ringkas
             document.getElementById('currentDate').innerText = now.toLocaleDateString('id-ID', optionsDate);
-            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false }; // Detik dihilangkan
             document.getElementById('currentTime').innerText = now.toLocaleTimeString('id-ID', optionsTime) + ' WIB';
         }
 
@@ -611,9 +630,9 @@
         function updateDatabaseStatus(status) {
             const badge = document.getElementById('dbStatusBadge');
             if (status === 'online') {
-                badge.innerHTML = `<i class="fa-solid fa-database text-success me-1"></i> <span class="text-success fw-semibold">DB Online</span>`;
+                badge.innerHTML = `<i class="fa-solid fa-database text-success me-1"></i><span class="text-success fw-semibold">Online</span>`; // Diperkecil teksnya
             } else {
-                badge.innerHTML = `<i class="fa-solid fa-database text-danger me-1"></i> <span class="text-danger fw-semibold">DB Offline (Demo)</span>`;
+                badge.innerHTML = `<i class="fa-solid fa-database text-danger me-1"></i><span class="text-danger fw-semibold">Offline</span>`; // Diperkecil teksnya
             }
         }
 
@@ -715,38 +734,7 @@
                 }
             });
 
-            // 2. Grafik Frekuensi Mesin Sering Perbaikan (Bar Chart)
-            const machineCounts = {};
-            data.forEach(item => {
-                const machine = item.namaMesin || 'Lainnya';
-                machineCounts[machine] = (machineCounts[machine] || 0) + 1;
-            });
-            const sortedMachines = Object.entries(machineCounts).sort((a, b) => b[1] - a[1]);
-            const machineLabels = sortedMachines.map(item => item[0]);
-            const machineValues = sortedMachines.map(item => item[1]);
-
-            const ctxMachine = document.getElementById('machineChart').getContext('2d');
-            if(machineChartInstance) machineChartInstance.destroy();
-            machineChartInstance = new Chart(ctxMachine, {
-                type: 'bar',
-                data: {
-                    labels: machineLabels.length ? machineLabels : ['-'],
-                    datasets: [{
-                        label: 'Jumlah Perbaikan',
-                        data: machineValues.length ? machineValues : [0],
-                        backgroundColor: '#2563eb',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                }
-            });
-
-            // 3. Grafik Persentase Petugas Teknisi (Doughnut Chart)
+            // 2. Grafik Persentase Petugas Teknisi (Doughnut Chart)
             const techCounts = {};
             data.forEach(item => {
                 const petugasStr = item.petugasMengerjakan || item.namaPetugas || '';
@@ -778,6 +766,90 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // 3. Grafik Frekuensi Perbaikan Mesin (Bar Chart dengan Gradasi Biru ke Hijau & Highlighting Nilai Tertinggi)
+            const machineCounts = {};
+            data.forEach(item => {
+                const machine = item.namaMesin || 'Lainnya';
+                machineCounts[machine] = (machineCounts[machine] || 0) + 1;
+            });
+
+            const machineLabels = Object.keys(machineCounts);
+            const machineValues = Object.values(machineCounts);
+
+            const maxMachineValue = machineValues.length ? Math.max(...machineValues) : 0;
+            const minMachineValue = machineValues.length ? Math.min(...machineValues) : 0;
+            const rangeValue = (maxMachineValue - minMachineValue) || 1;
+
+            const highlightColor = '#f43f5e'; // Warna aksen mencolok untuk nilai tertinggi (Rose/Red)
+
+            const machineColors = machineValues.map(val => {
+                // Jika merupakan nilai tertinggi, berikan warna mencolok
+                if (val === maxMachineValue && val > 0) {
+                    return highlightColor;
+                }
+                
+                // Menghitung rasio proporsional untuk gradasi dari Biru Tua (#1e3a8a) ke Hijau Industrial (#0d9488)
+                const ratio = (val - minMachineValue) / rangeValue;
+                
+                // Interpolasi warna RGB dasar
+                const r = Math.round(30 + (13 - 30) * ratio);
+                const g = Math.round(58 + (148 - 58) * ratio);
+                const b = Math.round(138 + (136 - 138) * ratio);
+                
+                return `rgb(${r}, ${g}, ${b})`;
+            });
+
+            const ctxMachine = document.getElementById('machineRepairChart').getContext('2d');
+            if (machineRepairChartInstance) machineRepairChartInstance.destroy();
+            machineRepairChartInstance = new Chart(ctxMachine, {
+                type: 'bar',
+                data: {
+                    labels: machineLabels.length ? machineLabels : ['-'],
+                    datasets: [{
+                        label: 'Jumlah Perbaikan',
+                        data: machineValues.length ? machineValues : [0],
+                        backgroundColor: machineColors,
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + ' kali';
+                                        if (context.parsed.y === maxMachineValue && maxMachineValue > 0) {
+                                            label += ' (Tertinggi)';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            ticks: { stepSize: 1 },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            ticks: { font: { size: 10 } },
+                            grid: { display: false }
+                        }
                     }
                 }
             });
